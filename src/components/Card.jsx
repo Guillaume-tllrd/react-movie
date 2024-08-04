@@ -31,8 +31,6 @@ const Card = ({movie}) => {
                 break;
                 case 14: genreArray.push("Fantaisie");
                 break;
-                case 14: genreArray.push("Fantaisie");
-                break;
                 case 36: genreArray.push("Histoire");
                 break;
                 case 27: genreArray.push("Horreur");
