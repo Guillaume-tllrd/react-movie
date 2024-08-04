@@ -11,7 +11,7 @@ const Card = ({movie}) => {
     const genreFinder = () => {
         // on remplit manuellement avec une boucle for et un switch en fonction des ids car certains sont bcp trop élevés. ON crée d'abord un Array et esnuite avec le switch on va push les infos en fonction de l'id
         let genreArray = [];
-        for (let i=0; i< movie.genre_ids.lenght; i++){
+        for (let i=0; i < movie.genre_ids.lenght; i++){
             switch (movie.genre_ids[0]) {
                 case 28: genreArray.push("Action");
                 break;
@@ -59,6 +59,18 @@ const Card = ({movie}) => {
         // on oublie pas de retourner genreAray en lui faisant un map pour retourner des li
         return genreArray.map((genre) => <li key={genre} >{genre}</li>);
     }
+    // pour la function on doit addStorage on stocke le film avec l'id du film
+    function addStorage(){
+        // on déclare une var si il y quelques chose dans le local storage tu me l'affiche en mettant des virgules sinon tableau vide
+        let storedData = window.localStorage.movies ? window.localStorage.movies.split(",") : [];
+        // si il n'y a pas de movie.id(passé en string car de base c un number) dans le tableau alors tu me fais un push de movie.id. en gros on s'assure qu'il n'y a pas de double et ensuite on le push
+        if(!storedData.includes(movie.id.toString())){
+            storedData.push(movie.id);
+            // dans le localStorage la boite va s'appeler movies:
+            window.localStorage.movies = storedData
+        }
+
+    }
     return (
         <div className='card'>
             {/* si il y a une img tu me l'affiches sinon tu m'affiches celle du fichier */}
@@ -73,9 +85,10 @@ const Card = ({movie}) => {
                     movie.genre_ids ? genreFinder() : null
                 }
             </ul>
-            {/* si le synopsis existe alors tu me lemt sinon tu me met des guillemets vides */}
+            {/* si le synopsis existe alors tu me le met sinon tu me met des guillemets vides */}
             {movie.overview ? <h3>Synopsis</h3> : ""}
             <p>{movie.overview}</p>
+            <div className="btn" onClick={() => addStorage()}>Ajouter au coups de coeur</div>
         </div>
     );
 };
