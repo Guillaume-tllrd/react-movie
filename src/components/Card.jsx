@@ -11,52 +11,73 @@ const Card = ({movie}) => {
     const genreFinder = () => {
         // on remplit manuellement avec une boucle for et un switch en fonction des ids car certains sont bcp trop élevés. ON crée d'abord un Array et esnuite avec le switch on va push les infos en fonction de l'id
         let genreArray = [];
-        for (let i=0; i < movie.genre_ids.lenght; i++){
-            switch (movie.genre_ids[0]) {
-                case 28: genreArray.push("Action");
-                break;
-                case 12: genreArray.push("Aventure");
-                break;
-                case 16: genreArray.push("Animation");
-                break;
-                case 35: genreArray.push("Comédie");
-                break;
-                case 80: genreArray.push("Policier");
-                break;
-                case 99: genreArray.push("Documentaire");
-                break;
-                case 18: genreArray.push("Drame");
-                break;
-                case 10751: genreArray.push("Famille");
-                break;
-                case 14: genreArray.push("Fantaisie");
-                break;
-                case 36: genreArray.push("Histoire");
-                break;
-                case 27: genreArray.push("Horreur");
-                break;
-                case 10482: genreArray.push("Musique");
-                break;
-                case 9648: genreArray.push("Mystère");
-                break;
-                case 10749: genreArray.push("Romance");
-                break;
-                case 878: genreArray.push("Science-fiction");
-                break;
-                case 10770: genreArray.push("Téléfilm");
-                break;
-                case 53: genreArray.push("Thriller");
-                break;
-                case 10752: genreArray.push("Guerre");
-                break;
-                case 37: genreArray.push("Western");
-                break;
-                default: break;
-            }
+        for (let i = 0; i < movie.genre_ids.length; i++) {
+          switch (movie.genre_ids[i]) {
+            case 28:
+              genreArray.push(`Action`);
+              break;
+            case 12:
+              genreArray.push(`Aventure`);
+              break;
+            case 16:
+              genreArray.push(`Animation`);
+              break;
+            case 35:
+              genreArray.push(`Comédie`);
+              break;
+            case 80:
+              genreArray.push(`Policier`);
+              break;
+            case 99:
+              genreArray.push(`Documentaire`);
+              break;
+            case 18:
+              genreArray.push(`Drame`);
+              break;
+            case 10751:
+              genreArray.push(`Famille`);
+              break;
+            case 14:
+              genreArray.push(`Fantasy`);
+              break;
+            case 36:
+              genreArray.push(`Histoire`);
+              break;
+            case 27:
+              genreArray.push(`Horreur`);
+              break;
+            case 10402:
+              genreArray.push(`Musique`);
+              break;
+            case 9648:
+              genreArray.push(`Mystère`);
+              break;
+            case 10749:
+              genreArray.push(`Romance`);
+              break;
+            case 878:
+              genreArray.push(`Science-fiction`);
+              break;
+            case 10770:
+              genreArray.push(`Téléfilm`);
+              break;
+            case 53:
+              genreArray.push(`Thriller`);
+              break;
+            case 10752:
+              genreArray.push(`Guerre`);
+              break;
+            case 37:
+              genreArray.push(`Western`);
+              break;
+            default:
+              break;
+          }
         }
         // on oublie pas de retourner genreAray en lui faisant un map pour retourner des li
-        return genreArray.map((genre) => <li key={genre} >{genre}</li>);
-    }
+        return genreArray.map((genre) => <li key={genre}>{genre}</li>);
+      };
+    
     // pour la function on doit addStorage on stocke le film avec l'id du film
     function addStorage(){
         // on déclare une var si il y quelques chose dans le local storage tu me l'affiche en mettant des virgules sinon tableau vide
@@ -67,7 +88,13 @@ const Card = ({movie}) => {
             // dans le localStorage la boite va s'appeler movies:
             window.localStorage.movies = storedData
         }
-
+    }
+    const deleteStorage = () => {
+        // on récupère la data qui est stockée
+        let storedData = window.localStorage.movies.split(",");
+        // tous les id qui ne sont pas égaux à movie.id tu les gardes donc tu supprimes celui qui a le mm id et après on refait un stockage
+        let newData = storedData.filter((id) => id != movie.id)
+        window.localStorage.movies = newData;
     }
     return (
         <div className='card'>
@@ -76,17 +103,28 @@ const Card = ({movie}) => {
             <h2>{movie.title}</h2>
             {movie.release_date ? 
                 <h5>Sorti le : {dateFormater(movie.release_date)}</h5> : null}
-            <h4>{movie.vote_average}/10 <span>⭐</span></h4>
+            <h4>{movie.vote_average.toFixed(1)}/10 <span>⭐</span></h4> 
+            {/* tofixed c'est la méthode pour mettre un chiffre après la virgule */}
             {/* on recupère l'émoji sur google */}
             <ul>
                 {
-                    movie.genre_ids ? genreFinder() : null
+                    movie.genre_ids ? genreFinder() : movie.genres.map((genre) => 
+                        <li key={genre}>{genre.name}</li>
+                    )
                 }
             </ul>
             {/* si le synopsis existe alors tu me le met sinon tu me met des guillemets vides */}
             {movie.overview ? <h3>Synopsis</h3> : ""}
             <p>{movie.overview}</p>
-            <div className="btn" onClick={() => addStorage()}>Ajouter au coups de coeur</div>
+            {/* étant donné que dans le fetch du form il y a genre_ids mais que dans le fetch du likePage ça s'appelle uniquement genre on va jouer sur ces 2 paramètres pour différencier les btns */}
+            {movie.genre_ids ? (
+                <div className="btn" onClick={() => addStorage()}>Ajouter au coups de coeur</div>
+            ) : (
+                <div className="btn" onClick={() => {deleteStorage();
+                    window.location.reload();
+                }}>Supprimer de la liste</div>
+             
+            )} 
         </div>
     );
 };
