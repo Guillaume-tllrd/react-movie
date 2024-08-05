@@ -31,7 +31,9 @@ const [sortGoodBad, setSortGoodBad] = useState(null);
                 .sort((a,b) => {
                     if(sortGoodBad === "goodToBad"){
                         return b.vote_average - a.vote_average;
+                        // du + grand au + petit
                     } else if(sortGoodBad === "badToGood"){
+                        // du + petit au + grand
                         return a.vote_average - b.vote_average;
                     }
                     })

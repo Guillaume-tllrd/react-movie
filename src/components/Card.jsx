@@ -107,6 +107,7 @@ const Card = ({movie}) => {
             {/* tofixed c'est la méthode pour mettre un chiffre après la virgule */}
             {/* on recupère l'émoji sur google */}
             <ul>
+              {/* si il y a genre id tu m'appelles la function sinon on va chercher le genre de l'autre fetch */}
                 {
                     movie.genre_ids ? genreFinder() : movie.genres.map((genre) => 
                         <li key={genre}>{genre.name}</li>
